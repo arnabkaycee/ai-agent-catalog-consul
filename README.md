@@ -245,7 +245,7 @@ Press Ctrl+C to exit when finished.
      curl -X POST http://localhost:8000/tasks -H "Content-Type: application/json" -d '{"inputs": {"question": "Tell me a joke"}}'
      ```
 
-## Consul-based Service Discovery
+## Consul-based AI Agent Discovery
 
 The project now includes integration with HashiCorp Consul for service registry and discovery:
 
