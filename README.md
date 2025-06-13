@@ -3,7 +3,7 @@
 Medium Article:
 https://medium.com/@CorticalFlow/googles-agent2agent-a2a-protocol-implementation-with-ollama-integration-27f1c9f2d4d3
 
-This repository demonstrates an implementation of Google's Agent2Agent (A2A) protocol integrated with Ollama for local LLM inference. It now also includes integration with Model Context Protocol (MCP) for tool usage and sharing.
+This repository demonstrates an implementation of Google's Agent2Agent (A2A) protocol integrated with Ollama for local LLM inference. It now also includes integration with Model Context Protocol (MCP) for tool usage and sharing, as well as HashiCorp Consul for service discovery and dynamic agent orchestration.
 
 ## Project Structure
 
@@ -26,6 +26,10 @@ lab-a2a-ollama-2/
 ├── examples/               # Example implementations
 │   ├── simple_chat/        # Basic agent chat example
 │   ├── multi_agent/        # Multiple agents working together
+│   │   ├── agent_creative.py  # Creative content generation agent
+│   │   ├── agent_knowledge.py # Knowledge and research agent
+│   │   ├── agent_reasoning.py # Analytical reasoning agent
+│   │   └── delegator.py       # Dynamic agent orchestrator
 │   ├── sse_streaming/      # Real-time streaming with Server-Sent Events
 │   ├── webhook_notifications/ # Proactive task status updates via webhooks
 │   └── mcp_integration/    # MCP integration examples
@@ -241,6 +245,46 @@ Press Ctrl+C to exit when finished.
      curl -X POST http://localhost:8000/tasks -H "Content-Type: application/json" -d '{"inputs": {"question": "Tell me a joke"}}'
      ```
 
+## Consul-based Service Discovery
+
+The project now includes integration with HashiCorp Consul for service registry and discovery:
+
+1. Ensure you have HashiCorp Consul installed and running:
+
+```bash
+# Install Consul (example for macOS with Homebrew)
+brew install consul
+
+# Start Consul in development mode
+consul agent -dev
+```
+
+2. Start specialized agents with Consul registration:
+
+```bash
+cd examples/multi_agent
+python agent_knowledge.py --port 8001 --consul-address localhost:8500
+python agent_reasoning.py --port 8002 --consul-address localhost:8500
+python agent_creative.py --port 8003 --consul-address localhost:8500
+```
+
+3. Run the delegator which automatically discovers available agents:
+
+```bash
+python delegator.py --request "Research the impact of artificial intelligence on healthcare" --consul-address localhost:8500
+```
+
+The delegator will:
+1. Discover all available A2A agents from Consul registry
+2. Analyze the request to determine the most appropriate agent
+3. Automatically route the request to the selected agent
+4. Return the response and save it to a markdown file
+
+Try different types of requests to see dynamic agent selection in action:
+- Research/factual requests will be routed to the Knowledge Agent
+- Analysis/reasoning requests will be routed to the Reasoning Agent
+- Creative/narrative requests will be routed to the Creative Agent
+
 ## About MCP Integration
 
 The Model Context Protocol (MCP) integration allows:
@@ -253,4 +297,4 @@ This creates a powerful ecosystem where agents can discover and use each other's
 
 ## License
 
-MIT 
+MIT
