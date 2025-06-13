@@ -281,7 +281,8 @@ def run_server(
     port: int = 8000,
     ollama_host: str = "http://localhost:11434",
     endpoint: str = None,
-    webhook_url: str = None
+    webhook_url: str = None,
+    system_prompt: str = None
 ):
     """
     Run the A2A server.
@@ -295,6 +296,7 @@ def run_server(
         ollama_host: The Ollama host URL
         endpoint: The endpoint where this agent is accessible
         webhook_url: URL to send task status updates to (optional)
+        system_prompt: Custom system prompt to guide the model's behavior (optional)
     """
     server = A2AServer(
         model=model,
@@ -306,6 +308,10 @@ def run_server(
         endpoint=endpoint,
         webhook_url=webhook_url
     )
+    
+    # Set system prompt if provided
+    if system_prompt:
+        server.a2a_ollama.system_prompt = system_prompt
     
     server.run()
 
@@ -330,4 +336,4 @@ if __name__ == "__main__":
         name="Ollama A2A Agent",
         description="An A2A-compatible agent powered by Ollama",
         skills=skills
-    ) 
+    )

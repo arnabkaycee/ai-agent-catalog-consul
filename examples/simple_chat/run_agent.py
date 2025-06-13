@@ -17,7 +17,7 @@ from a2a.server import run_server
 def main():
     """Run a simple A2A agent server."""
     parser = argparse.ArgumentParser(description="Run an A2A Agent")
-    parser.add_argument("--model", type=str, default="gemma3:27b", help="The Ollama model to use")
+    parser.add_argument("--model", type=str, default="gemma3:27b-it-qat", help="The Ollama model to use")
     parser.add_argument("--port", type=int, default=8000, help="The port to run the server on")
     parser.add_argument("--ollama-host", type=str, default="http://localhost:11434", help="The Ollama host URL")
     

@@ -9,3 +9,5 @@ uvicorn==0.24.0
 python-multipart==0.0.6
 pydantic
 aiohttp==3.9.1
+# Consul integration
+consulate==0.6.0
